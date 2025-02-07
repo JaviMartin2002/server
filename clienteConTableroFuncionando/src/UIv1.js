@@ -15,20 +15,11 @@ UIv1.drawBoard = (board) => {
         base.innerHTML = '';
         base.style.gridTemplateColumns = `repeat(${board.length}, 100px)`;
         base.style.gridTemplateRows = `repeat(${board.length}, 100px)`;
-        const playersPositions = [
-            { row: 0, col: board.length - 1 },
-            { row: board.length - 1, col: 0 },
-            { row: 0, col: 0 },
-            { row: board.length - 1, col: board.length - 1 }
-        ];
-        board.forEach((row, rowIndex) => row.forEach((element, colIndex) => {
+        board.forEach(element => element.forEach((element) => {
             const tile = document.createElement("div");
             tile.classList.add("tile");
             base.appendChild(tile);
-            if (playersPositions.some(pos => pos.row === rowIndex && pos.col === colIndex)) {
-                element === ELEMENTS.players;
-                tile.classList.add("player");
-            }else if (element === ELEMENTS.bush) {
+            if (element === ELEMENTS.bush) {
                 tile.classList.add("bush");
             }
             anime({
