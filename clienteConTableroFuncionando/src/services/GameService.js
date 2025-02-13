@@ -14,8 +14,9 @@ export class GameService {
     #parallel = null;
 
     #actionsList = {
-        "NEW_PLAYER" : this.do_newPlayer.bind(this),
-        "BOARD" : this.do_newBoard.bind(this)
+        "BOARD" : this.do_newBoard.bind(this),
+        "NEW_PLAYER" : this.do_newPlayer.bind(this)
+        
     };
 
     constructor(ui){
@@ -59,12 +60,12 @@ export class GameService {
         const player = payload;
         this.#players.push(player);
         console.log(this.#players);
-        this.#ui.drawPlayer(player);
     };
 
     async do_newBoard(payload) {
         this.#board.build(payload);
         this.#ui.drawBoard(this.#board.map);
+        this.#ui.drawPlayers(this.#players);
     }
 
     movePlayer(player, direction) {

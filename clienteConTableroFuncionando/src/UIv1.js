@@ -34,20 +34,22 @@ UIv1.drawBoard = (board) => {
     }
 }
 
-UIv1.drawPlayer = (player) => {
+UIv1.drawPlayers = (players) => {
     const base = document.getElementById(UIv1.uiElements.board);
-    const tile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
-    if (tile) {
-        console.log(`Drawing player at: (${player.x}, ${player.y})`);
-        tile.classList.add("player");
-        anime({
-            targets: tile,
-            opacity: [0, 1],
-            duration: 1000,
-            easing: 'easeInOutQuad'
-        });
-    } else {
-        console.error(`Tile not found at: (${player.x}, ${player.y})`);
-    }
+    players.forEach(player => {
+        const tile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
+        if (tile) {
+            console.log(`Drawing player at: (${player.x}, ${player.y})`);
+            tile.classList.add("player");
+            anime({
+                targets: tile,
+                opacity: [0, 1],
+                duration: 1000,
+                easing: 'easeInOutQuad'
+            });
+        } else {
+            console.error(`Tile not found at: (${player.x}, ${player.y})`);
+        }
+    });
 }
 
