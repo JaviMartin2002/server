@@ -4,13 +4,24 @@ import { Room } from "../room/entities/Room";
 import { RoomService } from "../room/RoomService";
 import { Game, GameStates, Messages } from "./entities/Game";
 import { BoardBuilder } from "./BoardBuilder";
-import { ServerService } from "../server/ServerService"
+import { ServerService } from "../server/ServerService";
+import { Board } from "./entities/Board";
+
 export class GameService {
     private games: Game[];
+    private initialPositions: { row: number, col: number }[];
+    private board: Board;
 
     private static instance: GameService;
     private constructor() {
         this.games = [];
+        this.board = new BoardBuilder().getBoard();
+        this.initialPositions = [
+            { row: 0, col: this.board.size - 1 },
+            { row: this.board.size - 1, col: 0 },
+            { row: 0, col: 0 },
+            { row: this.board.size - 1, col: this.board.size - 1 }
+        ];
     };
 
     static getInstance(): GameService {
@@ -32,9 +43,28 @@ export class GameService {
         }
     }
 
+    public assignInitialPosition(player: Player): void {
+        if (this.initialPositions.length > 0) {
+            const initialPositionIndex = Math.floor(Math.random() * this.initialPositions.length);
+            const initialPosition = this.initialPositions.splice(initialPositionIndex, 1)[0];
+            player.x = initialPosition.row;
+            player.y = initialPosition.col;
+            console.log(`Player assigned position: (${player.x}, ${player.y})`);
+        } else {
+            console.log("No initial positions available");
+            this.initialPositions = [
+                { row: 0, col: this.board.size - 1 },
+                { row: this.board.size - 1, col: 0 },
+                { row: 0, col: 0 },
+                { row: this.board.size - 1, col: this.board.size - 1 }
+            ];
+        }
+    }
+
     public addPlayer(player: Player): boolean {
         const room: Room = RoomService.getInstance().addPlayer(player);
-        //ServerService.getInstance().sendMessage(room.name,ServerService.messages.out.new_player,"new player");
+        this.assignInitialPosition(player);
+        // ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, player);
         ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, "new player");
         const genRanHex = (size: Number) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         if (room.players.length == 1) {
@@ -42,10 +72,13 @@ export class GameService {
                 id: "game" + genRanHex(128),
                 state: GameStates.WAITING,
                 room: room,
-                board: new BoardBuilder().getBoard()
+                board: this.board
             }
             room.game = game;
+            
             this.games.push(game);
+
+            
         }
 
         if (room.occupied) {

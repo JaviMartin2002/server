@@ -1,7 +1,9 @@
 import { Board } from "./entities/Board";
 
+
 export class BoardBuilder {
     private board: Board;
+    
     
     constructor() {
         this.board = {
@@ -9,12 +11,7 @@ export class BoardBuilder {
             elements: []
         }
 
-        const initialPositions = [
-            { row: 0, col: this.board.size - 1 },
-            { row: this.board.size - 1, col: 0 },
-            { row: 0, col: 0 },
-            { row: this.board.size - 1, col: this.board.size - 1 }
-        ];
+        
 
         const map : Array<number[]> = [
             [0,0,0,0,0,0,0,0,0,0],
@@ -40,9 +37,5 @@ export class BoardBuilder {
         return this.board;
     }
 
-    public getRandomInicialPosition() : number {
-        return Math.floor(Math.random() * this.board.size);
-        //delete(initialPositions[2]);
-    }
     
 }

@@ -56,11 +56,33 @@ export class GameService {
 
     async do_newPlayer (payload) {
         console.log("ha llegado un jugador nuevo");
+        const player = payload;
+        this.#players.push(player);
+        this.#ui.drawPlayer(player);
     };
 
     async do_newBoard(payload) {
         this.#board.build(payload);
         this.#ui.drawBoard(this.#board.map);
+    }
+
+    movePlayer(player, direction) {
+        const boardSize = this.#board.map.length;
+        switch (direction) {
+            case 'up':
+                if (player.x > 0) player.x--;
+                break;
+            case 'down':
+                if (player.x < boardSize - 1) player.x++;
+                break;
+            case 'left':
+                if (player.y > 0) player.y--;
+                break;
+            case 'right':
+                if (player.y < boardSize - 1) player.y++;
+                break;
+        }
+        this.#ui.drawPlayer(player);
     }
     
 }

@@ -48,7 +48,12 @@ export class ServerService {
 
         this.io.on('connection', (socket) => {
             socket.emit("connectionStatus", { status: true });
-            GameService.getInstance().addPlayer(GameService.getInstance().buildPlayer(socket));
+            const player = GameService.getInstance().buildPlayer(socket);
+            GameService.getInstance().addPlayer(player);
+
+            console.log(player.x, player.y);
+
+            this.sendMessage(null, ServerService.messages.out.new_player, player);
             
             socket.on("message", (data)=>{
                 const doType = this.inputMessage.find(item => item.type == data.type);

@@ -21,7 +21,14 @@ export class GameController {
     }
 
     actionController(payload) {
-        if (this.#state === this.#states.RIGHT)
-            this.#gameService.do(payload);
+        if (this.#state === this.#states.RIGHT) {
+            if (payload.type === "NEW_PLAYER") {
+                this.#gameService.do_newPlayer(payload.content);
+            } else if (payload.type === "BOARD") {
+                this.#gameService.do_newBoard(payload.content);
+            }
+        }
     }
+
+    
 }
