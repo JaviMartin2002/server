@@ -18,8 +18,8 @@ UIv1.drawBoard = (board) => {
         board.forEach((row, x) => row.forEach((element, y) => {
             const tile = document.createElement("div");
             tile.classList.add("tile");
-            tile.dataset.x = x; // Add x property
-            tile.dataset.y = y; // Add y property
+            tile.dataset.x = x; 
+            tile.dataset.y = y; 
             base.appendChild(tile);
             if (element === ELEMENTS.bush) {
                 tile.classList.add("bush");
@@ -36,14 +36,18 @@ UIv1.drawBoard = (board) => {
 
 UIv1.drawPlayer = (player) => {
     const base = document.getElementById(UIv1.uiElements.board);
-    const tiles = base.getElementsByClassName("tile");
-    for (let tile of tiles) {
-        if (parseInt(tile.dataset.x) === player.x && parseInt(tile.dataset.y) === player.y) {
-            tile.classList.add("player");
-            break;
-        }
+    const tile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
+    if (tile) {
+        console.log(`Drawing player at: (${player.x}, ${player.y})`);
+        tile.classList.add("player");
+        anime({
+            targets: tile,
+            opacity: [0, 1],
+            duration: 1000,
+            easing: 'easeInOutQuad'
+        });
+    } else {
+        console.error(`Tile not found at: (${player.x}, ${player.y})`);
     }
 }
-
-UIv1.drawBoard();
 
