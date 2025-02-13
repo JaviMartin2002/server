@@ -58,6 +58,7 @@ export class GameService {
         console.log("ha llegado un jugador nuevo");
         const player = payload;
         this.#players.push(player);
+        console.log(this.#players);
         this.#ui.drawPlayer(player);
     };
 

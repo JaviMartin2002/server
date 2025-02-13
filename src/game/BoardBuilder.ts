@@ -10,9 +10,7 @@ export class BoardBuilder {
             size: 8,
             elements: []
         }
-
         
-
         const map : Array<number[]> = [
             [0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,5,0,0,0],
