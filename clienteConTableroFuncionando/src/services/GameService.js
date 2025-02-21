@@ -55,18 +55,22 @@ export class GameService {
         this.checkScheduler();
     };
 
-    async do_newPlayer (payload) {
-        console.log("ha llegado un jugador nuevo");
-        const player = payload;
-        this.#players.push(player);
-        console.log(this.#players);
+    async do_allPlayer (payload) {
+        console.log("han llegado todos los jugadores");
+        foreach.payload(player => {
+            this.#players.push(player);
+        });
+        console.log("Current players:", this.#players);
     };
 
     async do_newBoard(payload) {
         this.#board.build(payload);
         this.#ui.drawBoard(this.#board.map);
+        console.log("Drawing players:", this.#players);
         this.#ui.drawPlayers(this.#players);
     }
+
+
 
     movePlayer(player, direction) {
         const boardSize = this.#board.map.length;

@@ -50,6 +50,7 @@ export class ServerService {
             socket.emit("connectionStatus", { status: true });
             const player = GameService.getInstance().buildPlayer(socket);
             GameService.getInstance().addPlayer(player);
+            
 
             console.log(player.x, player.y);
 
@@ -60,7 +61,7 @@ export class ServerService {
                 if (doType !== undefined) {
                     doType.do(data);
                 }
-            })
+            })  
 
             socket.on('disconnect', () => {
                 console.log('Un cliente se ha desconectado:', socket.id);
