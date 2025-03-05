@@ -183,4 +183,39 @@ export class GameService {
 
         return false;
     }
+
+    public shoot(playerId: string): string | null {
+        const room = this.games.find(game => game.room.players.some(p => p.id.id === playerId))?.room;
+        if (!room) return null;
+    
+        const player = room.players.find(p => p.id.id === playerId);
+        if (!player) return null;
+    
+        let targetX = player.x;
+        let targetY = player.y;
+    
+        switch (player.direction) {
+            case Directions.Up:
+                targetX--;
+                break;
+            case Directions.Down:
+                targetX++;
+                break;
+            case Directions.Left:
+                targetY--;
+                break;
+            case Directions.Right:
+                targetY++;
+                break;
+        }
+    
+        const targetPlayer = room.players.find(p => p.x === targetX && p.y === targetY);
+        if (targetPlayer) {
+            room.players = room.players.filter(p => p.id.id !== targetPlayer.id.id);
+            ServerService.getInstance().sendMessage(room.name, Messages.PLAYER_ELIMINATED, targetPlayer.id.id);
+            return targetPlayer.id.id;
+        }
+    
+        return null;
+    }
 }

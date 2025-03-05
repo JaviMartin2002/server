@@ -44,6 +44,11 @@ export const ConnectionHandler = {
         socket.on('NEW_PLAYER', (player) => {
             GameService.getInstance().do_newPlayer(player);
         });
+
+        socket.on('PLAYER_ELIMINATED', (playerId) => {
+            alert(`Player ${playerId} has been eliminated!`);
+            GameService.getInstance().removePlayer(playerId);
+        });
     },
     rotatePlayer: () => {
         if (ConnectionHandler.connected && ConnectionHandler.socket) {
@@ -56,6 +61,16 @@ export const ConnectionHandler = {
             ConnectionHandler.socket.emit("movePlayer");
         } else {
             console.log("No se ha podido mover el jugador");
+            console.log("Estado de conexión:", ConnectionHandler.connected);
+            console.log("Estado del socket:", ConnectionHandler.socket);
+        }
+    },
+    shoot: () => {
+        if (ConnectionHandler.connected && ConnectionHandler.socket) {
+            console.log("disparando");
+            ConnectionHandler.socket.emit("shoot");
+        } else {
+            console.log("No se ha podido disparar");
             console.log("Estado de conexión:", ConnectionHandler.connected);
             console.log("Estado del socket:", ConnectionHandler.socket);
         }

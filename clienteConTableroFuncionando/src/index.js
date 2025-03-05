@@ -12,3 +12,8 @@ document.getElementById("move").addEventListener("click", () => {
     console.log("Mover jugador pulsado");
     ConnectionHandler.movePlayer();
 });
+
+document.getElementById("shoot").addEventListener("click", () => {
+    console.log("Disparar pulsado");
+    ConnectionHandler.shoot();
+});

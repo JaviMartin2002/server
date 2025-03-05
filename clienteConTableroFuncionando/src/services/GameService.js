@@ -95,4 +95,31 @@ export class GameService {
         // Dibujar las nuevas posiciones de los jugadores
         this.#ui.drawPlayers(this.#players);
     }
+
+    removePlayer(playerId) {
+        // Buscar al jugador eliminado
+        const player = this.#players.find(player => player.id === playerId);
+        
+        if (player) {
+            const base = document.getElementById(this.#ui.uiElements.board);
+            const tile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
+    
+            // 💡 Eliminar su referencia en el mapa de posiciones ANTES de redibujar
+            playerPositions.delete(playerId);
+    
+            // 💡 Eliminar la clase de jugador en su casilla
+            if (tile) {
+                tile.classList.remove("player", "up", "right", "down", "left");
+            }
+    
+            // 🔥 Eliminarlo de la lista de jugadores
+            this.#players = this.#players.filter(p => p.id !== playerId);
+    
+            // 🔄 Redibujar los jugadores restantes
+            this.#ui.drawPlayers(this.#players);
+        }
+    }
+    
+    
+    
 }

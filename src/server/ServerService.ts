@@ -8,7 +8,8 @@ export class ServerService {
     private active : boolean;
     static messages = {
         out: {
-            new_player: "NEW_PLAYER"
+            new_player: "NEW_PLAYER",
+            player_eliminated: "PLAYER_ELIMINATED"
         } 
     }
 
@@ -79,6 +80,17 @@ export class ServerService {
                     console.log(`Player ${socket.id} moved`);
                 } else {
                     console.log(`Player ${socket.id} failed to move`);
+                }
+            });
+
+            socket.on("shoot", () => {
+                console.log(`Shoot request received from player ${socket.id}`);
+                const eliminatedPlayerId = GameService.getInstance().shoot(socket.id);
+                if (eliminatedPlayerId) {
+                    console.log(`Player ${eliminatedPlayerId} has been eliminated`);
+                    this.sendMessage(null, ServerService.messages.out.player_eliminated, eliminatedPlayerId);
+                } else {
+                    console.log(`No player was hit by ${socket.id}`);
                 }
             });
 
