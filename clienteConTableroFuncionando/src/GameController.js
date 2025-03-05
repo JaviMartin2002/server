@@ -15,8 +15,10 @@ export class GameController {
         this.#gameService = new GameService(ui);
         ConnectionHandler.init(url, this, () => {
             this.#state = this.#states.RIGHT;
+            console.log("Conectado");
         }, () => {
             this.#state = this.#states.BAD;
+            console.log("Desconectado");
         });
     }
 

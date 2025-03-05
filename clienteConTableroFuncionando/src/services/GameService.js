@@ -1,10 +1,11 @@
 import { Board } from "../entities/Board.js";
 import { Queue } from "../Queue.js";
+
 export class GameService {
     #states = {
-        WAITING : 0,
-        PLAYING : 1,
-        ENDED : 2
+        WAITING: 0,
+        PLAYING: 1,
+        ENDED: 2
     };
     #ui = null;
     #players = [];
@@ -14,12 +15,11 @@ export class GameService {
     #parallel = null;
 
     #actionsList = {
-        "BOARD" : this.do_newBoard.bind(this),
-        "NEW_PLAYER" : this.do_newPlayer.bind(this)
-        
+        "BOARD": this.do_newBoard.bind(this),
+        "NEW_PLAYER": this.do_newPlayer.bind(this)
     };
 
-    constructor(ui){
+    constructor(ui) {
         this.#state = this.#states.WAITING;
         this.#board = new Board();
         this.#queue = new Queue();
@@ -32,10 +32,10 @@ export class GameService {
         if (!this.#queue.isEmpty()) {
             if (this.#parallel == null) {
                 this.#parallel = setInterval(
-                    async ()=>{
+                    async () => {
                         const action = this.#queue.getMessage();
                         if (action != undefined) {
-                            await this.#actionsList[action.type] (action.content);
+                            await this.#actionsList[action.type](action.content);
                         } else {
                             this.stopScheduler();
                         }
@@ -50,13 +50,12 @@ export class GameService {
         this.#parallel = null;
     }
 
-    do (data) {
+    do(data) {
         this.#queue.addMessage(data);
         this.checkScheduler();
     };
 
-
-    async do_newPlayer (payload) {
+    async do_newPlayer(payload) {
         console.log("ha llegado un jugador nuevo");
         const players = Array.isArray(payload) ? payload : [payload];
         players.forEach(player => {
@@ -64,7 +63,6 @@ export class GameService {
         });
         console.log(this.#players);
         this.#ui.drawPlayers(this.#players);
-
     }
 
     async do_newBoard(payload) {
@@ -74,10 +72,11 @@ export class GameService {
         this.#ui.drawPlayers(this.#players);
     }
 
-
-
     movePlayer(player, direction) {
         const boardSize = this.#board.map.length;
+        const previousX = player.x;
+        const previousY = player.y;
+
         switch (direction) {
             case 'up':
                 if (player.x > 0) player.x--;
@@ -92,7 +91,8 @@ export class GameService {
                 if (player.y < boardSize - 1) player.y++;
                 break;
         }
-        this.#ui.drawPlayer(player);
+
+        // Dibujar las nuevas posiciones de los jugadores
+        this.#ui.drawPlayers(this.#players);
     }
-    
 }

@@ -27,32 +27,40 @@ UIv1.drawBoard = (board) => {
             anime({
                 targets: tile,
                 opacity: [0, 1],
-                duration: (Math.random() * 8000) + 1000,
+                duration: 0,
                 easing: 'easeInOutQuad'
             });
         }));
     }
 }
 
+const playerPositions = new Map(); // Mapa para almacenar la posición anterior de cada jugador
+
 UIv1.drawPlayers = (players) => {
     const base = document.getElementById(UIv1.uiElements.board);
-    
-    //base.querySelectorAll('.player').forEach(tile => tile.classList.remove('player'));
-    
+
     players.forEach(player => {
-        const tile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
-        if (tile) {
-            console.log(`Drawing player at: (${player.x}, ${player.y})`);
-            tile.classList.add("player");
-            anime({
-                targets: tile,
-                opacity: [0, 1],
-                duration: 1000,
-                easing: 'easeInOutQuad'
-            });
+        // Eliminar al jugador de su posición anterior
+        if (playerPositions.has(player.id)) {
+            const { x: oldX, y: oldY } = playerPositions.get(player.id);
+            const oldTile = base.querySelector(`[data-x="${oldX}"][data-y="${oldY}"]`);
+            if (oldTile) {
+                oldTile.classList.remove("player", "up", "right", "down", "left");
+            }
+        }
+
+        // Dibujar al jugador en su nueva posición
+        const newTile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
+        if (newTile) {
+            console.log(`Drawing player ${player.id} at: (${player.x}, ${player.y})`);
+            newTile.classList.add("player", player.direction.toLowerCase());
+
+            // Guardar la nueva posición
+            playerPositions.set(player.id, { x: player.x, y: player.y });
         } else {
             console.error(`Tile not found at: (${player.x}, ${player.y})`);
         }
     });
-}
+};
+
 

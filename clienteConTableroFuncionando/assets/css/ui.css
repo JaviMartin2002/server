@@ -26,3 +26,48 @@
     background-size: cover;
     height: 100%;
 }
+
+.board {
+    display: grid;
+    gap: 5px; 
+}
+
+.tile {
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dotted #000000;
+}
+
+.bush {
+    background-image: url('../img/arbusto.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+.player {
+    background-image: url('../img/pistola.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+.player.right {
+    transform: rotate(0deg);
+}
+
+.player.down {
+    transform: rotate(90deg);
+}
+
+.player.left {
+    transform: scaleX(-1);
+}
+
+.player.up {
+    transform: rotate(270deg);
+}

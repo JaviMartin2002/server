@@ -61,7 +61,26 @@ export class ServerService {
                 if (doType !== undefined) {
                     doType.do(data);
                 }
-            })  
+            })
+            
+            socket.on("rotatePlayer", () => {
+                const success = GameService.getInstance().rotatePlayer(socket.id);
+                if (success) {
+                    console.log(`Player ${socket.id} rotated`);
+                } else {
+                    console.log(`Player ${socket.id} failed to rotate`);
+                }
+            });
+
+            socket.on("movePlayer", () => {
+                console.log(`Move request received from player ${socket.id}`);
+                const success = GameService.getInstance().movePlayer(socket.id);
+                if (success) {
+                    console.log(`Player ${socket.id} moved`);
+                } else {
+                    console.log(`Player ${socket.id} failed to move`);
+                }
+            });
 
             socket.on('disconnect', () => {
                 console.log('Un cliente se ha desconectado:', socket.id);

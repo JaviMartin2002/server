@@ -14,8 +14,8 @@ export enum PlayerStates {
 
 export interface Player {
     id: Socket;
-    x: Number;
-    y: Number;
+    x: number;
+    y: number;
     state: PlayerStates;
     direction: Directions;
     visibility: Boolean;

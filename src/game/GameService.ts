@@ -7,7 +7,6 @@ import { BoardBuilder } from "./BoardBuilder";
 import { ServerService } from "../server/ServerService";
 import { Board } from "./entities/Board";
 
-
 export class GameService {
     private games: Game[];
     private initialPositions: { row: number, col: number }[];
@@ -39,7 +38,7 @@ export class GameService {
             x: 0,
             y: 0,
             state: PlayerStates.Idle,
-            direction: Directions.Up,
+            direction: Directions.Right,
             visibility: true
         }
     }
@@ -65,8 +64,6 @@ export class GameService {
     public addPlayer(player: Player): boolean {
         const room: Room = RoomService.getInstance().addPlayer(player);
         this.assignInitialPosition(player);
-        // ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, player);
-        // ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, { id: player.id.id, x: player.x, y: player.y, state: player.state, direction: player.direction, visibility: player.visibility });
         const genRanHex = (size: Number) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         if (room.players.length == 1) {
             const game: Game = {
@@ -76,10 +73,7 @@ export class GameService {
                 board: this.board
             }
             room.game = game;
-            
             this.games.push(game);
-
-            
         }
 
         if (room.occupied) {
@@ -87,14 +81,6 @@ export class GameService {
                 room.game.state = GameStates.PLAYING;
                 if (ServerService.getInstance().isActive()) {
                     ServerService.getInstance().sendMessage(room.name, Messages.BOARD, room.game.board);
-                    ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, {
-                        initialPositions: [
-                            { id: player.id.id, x: player.x, y: player.y, state: player.state, direction: player.direction, visibility: player.visibility },
-                            { id: player.id.id, x: player.x, y: player.y, state: player.state, direction: player.direction, visibility: player.visibility },
-                            { id: player.id.id, x: player.x, y: player.y, state: player.state, direction: player.direction, visibility: player.visibility },
-                            { id: player.id.id, x: player.x, y: player.y, state: player.state, direction: player.direction, visibility: player.visibility }
-                        ]
-                    });
                 }
             }
             const playersData = room.players.map(p => ({
@@ -121,5 +107,80 @@ export class GameService {
         return false;
     }
 
+    public rotatePlayer(playerId: string): boolean {
+        const room = this.games.find(game => game.room.players.some(p => p.id.id === playerId))?.room;
+        if (!room) return false;
     
+        const player = room.players.find(p => p.id.id === playerId);
+        if (!player) return false;
+    
+        switch (player.direction) {
+            case Directions.Up:
+                player.direction = Directions.Right;
+                break;
+            case Directions.Right:
+                player.direction = Directions.Down;
+                break;
+            case Directions.Down:
+                player.direction = Directions.Left;
+                break;
+            case Directions.Left:
+                player.direction = Directions.Up;
+                break;
+        }
+    
+        ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, room.players.map(p => ({
+            id: p.id.id,
+            x: p.x,
+            y: p.y,
+            state: p.state,
+            direction: p.direction,
+            visibility: p.visibility
+        })));
+    
+        return true;
+    }
+
+    public movePlayer(playerId: string): boolean {
+        const room = this.games.find(game => game.room.players.some(p => p.id.id === playerId))?.room;
+        if (!room) return false;
+
+        const player = room.players.find(p => p.id.id === playerId);
+        if (!player) return false;
+
+        let newX = player.x;
+        let newY = player.y;
+
+        switch (player.direction) {
+            case Directions.Up:
+                newX--;
+                break;
+            case Directions.Down:
+                newX++;
+                break;
+            case Directions.Left:
+                newY--;
+                break;
+            case Directions.Right:
+                newY++;
+                break;
+        }
+
+        // Check if the new position is within the board boundaries and not occupied
+        if (newX >= 0 && newX < this.board.size && newY >= 0 && newY < this.board.size && !room.players.some(p => p.x === newX && p.y === newY)) {
+            player.x = newX;
+            player.y = newY;
+            ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, room.players.map(p => ({
+                id: p.id.id,
+                x: p.x,
+                y: p.y,
+                state: p.state,
+                direction: p.direction,
+                visibility: p.visibility
+            })));
+            return true;
+        }
+
+        return false;
+    }
 }
