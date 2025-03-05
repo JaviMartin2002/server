@@ -60,6 +60,7 @@ export class GameService {
             ];
         }
     }
+    
 
     public addPlayer(player: Player): boolean {
         const room: Room = RoomService.getInstance().addPlayer(player);
@@ -166,7 +167,7 @@ export class GameService {
                 break;
         }
 
-        // Check if the new position is within the board boundaries and not occupied
+    
         if (newX >= 0 && newX < this.board.size && newY >= 0 && newY < this.board.size && !room.players.some(p => p.x === newX && p.y === newY)) {
             player.x = newX;
             player.y = newY;

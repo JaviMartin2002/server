@@ -8,9 +8,9 @@ export const ConnectionHandler = {
     controller: null,
     init: (url, controller, onConnectedCallBack, onDisconnectedCallBack) => {
         ConnectionHandler.controller = controller;
-        ConnectionHandler.socket = io(url);  // 🔥 Aquí asignamos el socket correctamente
+        ConnectionHandler.socket = io(url);  
 
-        const socket = ConnectionHandler.socket; // Ahora sí lo referenciamos bien
+        const socket = ConnectionHandler.socket; 
 
         socket.onAny((message, payload) => {
             console.log("Esta llegando: ");
@@ -19,7 +19,7 @@ export const ConnectionHandler = {
             console.log(payload.content);
         });
 
-        socket.on("connect", () => { // 💡 Aquí también corregimos el manejo de "connect"
+        socket.on("connect", () => { 
             socket.on("connectionStatus", (data) => {
                 ConnectionHandler.connected = true;
                 console.log("Conectado al servidor:", data);

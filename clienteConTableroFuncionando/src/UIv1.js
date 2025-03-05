@@ -34,13 +34,13 @@ UIv1.drawBoard = (board) => {
     }
 }
 
-const playerPositions = new Map(); // Mapa para almacenar la posición anterior de cada jugador
+const playerPositions = new Map(); 
 
 UIv1.drawPlayers = (players) => {
     const base = document.getElementById(UIv1.uiElements.board);
 
     players.forEach(player => {
-        // Eliminar al jugador de su posición anterior
+        
         if (playerPositions.has(player.id)) {
             const { x: oldX, y: oldY } = playerPositions.get(player.id);
             const oldTile = base.querySelector(`[data-x="${oldX}"][data-y="${oldY}"]`);
@@ -49,13 +49,13 @@ UIv1.drawPlayers = (players) => {
             }
         }
 
-        // Dibujar al jugador en su nueva posición
+        
         const newTile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
         if (newTile) {
             console.log(`Drawing player ${player.id} at: (${player.x}, ${player.y})`);
             newTile.classList.add("player", player.direction.toLowerCase());
 
-            // Guardar la nueva posición
+            
             playerPositions.set(player.id, { x: player.x, y: player.y });
         } else {
             console.error(`Tile not found at: (${player.x}, ${player.y})`);

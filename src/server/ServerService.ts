@@ -9,7 +9,8 @@ export class ServerService {
     static messages = {
         out: {
             new_player: "NEW_PLAYER",
-            player_eliminated: "PLAYER_ELIMINATED"
+            player_eliminated: "PLAYER_ELIMINATED",
+            game_start: "GAME_START"
         } 
     }
 
@@ -116,7 +117,7 @@ export class ServerService {
     }
 
     public gameStartMessage() {
-        //
+        this.sendMessage(null, ServerService.messages.out.game_start, { message: "The game has started!" });
     }
 
     public isActive() {
