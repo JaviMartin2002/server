@@ -89,7 +89,25 @@ export class GameService {
                     ServerService.getInstance().sendMessage(room.name, Messages.BOARD, room.game.board);
                 }
             }
+            const playersData = room.players.map(p => ({
+                id: p.id.id,
+                x: p.x,
+                y: p.y,
+                state: p.state,
+                direction: p.direction,
+                visibility: p.visibility
+            }));
+            ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, playersData);
             return true;
+        } else {
+            ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, {
+                id: player.id.id,
+                x: player.x,
+                y: player.y,
+                state: player.state,
+                direction: player.direction,
+                visibility: player.visibility
+            });
         }
 
         return false;

@@ -57,9 +57,12 @@ export class GameService {
 
     async do_newPlayer (payload) {
         console.log("ha llegado un jugador nuevo");
-        const player = payload;
-        this.#players.push(player);
+        const players = Array.isArray(payload) ? payload : [payload];
+        players.forEach(player => {
+            this.#players.push(player);
+        });
         console.log(this.#players);
+        this.#ui.drawPlayers(this.#players);
     };
 
     async do_newBoard(payload) {
