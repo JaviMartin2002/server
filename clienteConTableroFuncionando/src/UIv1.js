@@ -36,6 +36,9 @@ UIv1.drawBoard = (board) => {
 
 UIv1.drawPlayers = (players) => {
     const base = document.getElementById(UIv1.uiElements.board);
+    
+    //base.querySelectorAll('.player').forEach(tile => tile.classList.remove('player'));
+    
     players.forEach(player => {
         const tile = base.querySelector(`[data-x="${player.x}"][data-y="${player.y}"]`);
         if (tile) {

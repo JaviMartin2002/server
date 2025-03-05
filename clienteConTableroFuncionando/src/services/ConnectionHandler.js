@@ -33,5 +33,17 @@ export const ConnectionHandler = {
                 onDisconnectedCallBack();
             });
         })
+
+            socket.on('CURRENT_PLAYERS', (players) => {
+                GameService.getInstance().updatePlayers(players);
+            });
+
+            socket.on('NEW_PLAYER', (player) => {
+                GameService.getInstance().do_newPlayer(player);
+            });
+
+            function addNewPlayer(player) {
+                socket.emit('newPlayer', player);
+            }
     }
 }
